@@ -15,8 +15,6 @@ const ListHeader = () => (
 export default function App() {
   return (
     <SafeAreaView style={styles.container}>
-      
-
       <FlatList
         keyExtractor={(item) => item.id}
         data={SAMPLE_DATA}

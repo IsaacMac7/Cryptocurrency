@@ -7,7 +7,6 @@ const CoinItem = ( {name, symbol, currentPrice, priceChangePercentage7d, logoUrl
     return (
         <TouchableOpacity>
             <View style={styles.itemWrapper}>
-
                <View style={styles.leftWrapper}>
                     <Image source={{ uri: logoUrl}} style={styles.image}/>
                     <View style={styles.titlesWrapper}>
@@ -15,12 +14,10 @@ const CoinItem = ( {name, symbol, currentPrice, priceChangePercentage7d, logoUrl
                         <Text style={styles.subtitle}>{symbol.toUpperCase()}</Text>
                     </View>
                </View>
-
                <View style={styles.rightWrapper}>
                     <Text style={styles.title}>${currentPrice}</Text>
                     <Text style={styles.subtitle, {color: priceChangeColor} }>{priceChangePercentage7d}</Text>
                </View>
-
             </View>
         </TouchableOpacity>
     )
