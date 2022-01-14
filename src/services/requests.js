@@ -1,6 +1,7 @@
 import axios from "axios";
 import moment from "moment";
 
+//formatting of data into x and y
 const formatSparkline = (numbers) => {
     const sevenDaysAgo = moment().subtract(7, 'days').unix();
     let formattedSparkline = numbers.map((item, index) => {
@@ -13,6 +14,7 @@ const formatSparkline = (numbers) => {
     return formattedSparkline;
 }
 
+//formatting of data
 const formatMarketData = (data) => {
     let formattedData = [];
 
@@ -32,6 +34,8 @@ const formatMarketData = (data) => {
     return formattedData;
 }
 
+
+//retrieve data
 export const getMarketData = async () => {
 
     //coin gecko api call
