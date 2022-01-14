@@ -1,11 +1,16 @@
 import React from 'react';
 import { View, Text, StyleSheet, Image, TouchableOpacity } from 'react-native';
+import { useNavigation, NavigationContainer } from '@react-navigation/native';
+import { createStackNavigator } from '@react-navigation/native-stack';
+import DetailedScreen from '../screens/DetailedScreen';
 
-const CoinItem = ( {name, symbol, currentPrice, priceChangePercentage7d, logoUrl}) => {
+
+const CoinItem = ( {name, symbol, currentPrice, priceChangePercentage7d, logoUrl, onPress }) => {
     const priceChangeColor = priceChangePercentage7d > 0 ? 'green' : 'red'
 
+    
     return (
-        <TouchableOpacity>
+        <TouchableOpacity onPress={onPress}>
             <View style={styles.itemWrapper}>
                <View style={styles.leftWrapper}>
                     <Image source={{ uri: logoUrl}} style={styles.image}/>
