@@ -16,7 +16,7 @@ const CoinItem = ( {name, symbol, currentPrice, priceChangePercentage7d, logoUrl
                </View>
                <View style={styles.rightWrapper}>
                     <Text style={styles.title}>${currentPrice}</Text>
-                    <Text style={styles.subtitle, {color: priceChangeColor} }>{priceChangePercentage7d}</Text>
+                    <Text style={styles.subtitle, {color: priceChangeColor} }>{priceChangePercentage7d.toFixed(2)}%</Text>
                </View>
             </View>
         </TouchableOpacity>

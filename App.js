@@ -3,6 +3,7 @@ import { StyleSheet, Text, View, FlatList, SafeAreaView} from 'react-native';
 import React, { useState, useEffect } from 'react';
 import CoinItem from './src/components/CoinItem';
 import {SAMPLE_DATA } from './src/assets/data/sampleData';
+import { getMarketData } from './src/services/requests';
 
 const ListHeader = () => (
   <>
@@ -13,11 +14,23 @@ const ListHeader = () => (
   </>
 )
 export default function App() {
+  const [data, setData] = useState([]);
+
+  useEffect (() => {
+    const fetchMarketData = async () => {
+      const marketData = await getMarketData();
+      setData(marketData);
+    }
+
+    fetchMarketData();
+
+  }, [])
+
   return (
     <SafeAreaView style={styles.container}>
       <FlatList
         keyExtractor={(item) => item.id}
-        data={SAMPLE_DATA}
+        data={data}
         renderItem={({item}) => (
           <CoinItem 
             name={item.name} 
