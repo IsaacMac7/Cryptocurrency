@@ -7,7 +7,6 @@ import DetailedScreen from '../screens/DetailedScreen';
 
 const CoinItem = ( {name, symbol, currentPrice, priceChangePercentage7d, logoUrl, onPress }) => {
     const priceChangeColor = priceChangePercentage7d > 0 ? 'green' : 'red'
-
     
     return (
         <TouchableOpacity onPress={onPress}>
