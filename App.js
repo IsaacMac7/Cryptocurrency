@@ -2,7 +2,6 @@ import { StatusBar } from 'expo-status-bar';
 import { StyleSheet, Text, View, FlatList, SafeAreaView} from 'react-native';
 import React, { useState, useEffect } from 'react';
 import CoinItem from './src/components/CoinItem';
-import {SAMPLE_DATA } from './src/assets/data/sampleData';
 import { getMarketData } from './src/services/requests';
 
 const ListHeader = () => (
