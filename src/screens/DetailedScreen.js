@@ -2,15 +2,20 @@ import React from 'react';
 import { StyleSheet, View, Text, Image} from 'react-native';
 import CoinChart from '../components/CoinChart';
 
-const DetailedScreen = ({ navigation }) => {
-    const priceChangeColor = priceChangePercentage7d > 0 ? 'green' : 'red';
-    console.log("detailed page " + typeof(priceChangePercentage7d));
+const DetailedScreen = ({ navigation , route }) => {
 
     const logoUrl = navigation.getParam('image');
     const name = navigation.getParam('name');
     const symbol = navigation.getParam('symbol');
     const currentPrice = navigation.getParam('current_price');
     const priceChangePercentage7d = navigation.getParam('price_change_percentage_7d_in_currency');
+    const sparklinePrice = navigation.getParam('sparkline_in_7d.price');
+    // const data = route.sparkline_in_7d.price;
+    // console.log("sparkline " + data);
+
+    const priceChangeColor = priceChangePercentage7d > 0 ? 'green' : 'red';
+
+    console.log(sparklinePrice);
 
     return (
         <View style={styles.detailedScreenWrapper}>
@@ -19,12 +24,11 @@ const DetailedScreen = ({ navigation }) => {
                     <Image source={{ uri: logoUrl}} style={styles.image}/>
                     <Text style={styles.name}> {name} </Text>
                 </View>
-
                 <Text style={styles.subtitle}>{name} price ({symbol.toUpperCase()}) </Text>
-                {/* <Text style={styles.days}>7d</Text> */}
                 <View style={styles.rightTitles}>
                     <Text style={styles.currentPrice}>${currentPrice}</Text>
-                    <Text style={styles.priceChange, {backgroundColor: priceChangeColor} }>{priceChangePercentage7d.toFixed(2)}%</Text>
+                    <Text style={styles.priceChange, {backgroundColor:priceChangeColor, fontSize: 15, 
+                    padding: 5, borderRadius: 10}}>{priceChangePercentage7d.toFixed(2)}%</Text>
                 </View>
             </View>
         </View>
@@ -68,6 +72,7 @@ const styles = StyleSheet.create({
         alignItems: 'center',
     },
     priceChange: {
+        fontSize: 30,
         color: 'white',
     }
 
