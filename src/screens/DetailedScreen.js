@@ -37,7 +37,13 @@ const DetailedScreen = ({ navigation , route }) => {
     }, [])
 
     if (loading || !coin || !coinMarketData) {
-        return <ActivityIndicator size="large" color="white"/>
+        return (
+            <View style={styles.loading}>
+                <ActivityIndicator size="large" color="white" />
+                <Text style={styles.loadingText}>Fetching data...</Text>
+            </View>
+            
+        )
     }
 
     const { prices } = coinMarketData;
@@ -109,7 +115,17 @@ const styles = StyleSheet.create({
     priceChange: {
         fontSize: 30,
         color: 'white',
+    },
+    loading: {
+        flex: 1,
+        justifyContent: 'center',
+        backgroundColor: "#121212",
+        alignItems: 'center',   
+    },
+    loadingText: {
+        color: 'white',
     }
+
 
 })
 
