@@ -39,7 +39,7 @@ export default function HomeScreen({ navigation }) {
                 currentPrice={item.current_price}
                 priceChangePercentage7d={item.price_change_percentage_7d_in_currency}
                 logoUrl={item.image}
-                onPress={() => navigation.navigate('DetailedScreen',    item)}
+                onPress={() => navigation.navigate('DetailedScreen', item)}
             />
             )}
             ListHeaderComponent={<ListHeader/>}

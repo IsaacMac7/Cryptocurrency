@@ -51,11 +51,22 @@ export const getMarketData = async () => {
     }
 }
 
-// export  const getCoinData = async (coinId) => {
-//     try {
-//         const response =  await axios.get(`https://api.coingecko.com/api/v3/coins/${coinId}?localization=false&tickers=true&market_data=true&community_data=false&developer_data=false&sparkline=true`)
-//         return response.data;
-//     } catch (error) {
-//         console.log(error.message)
-//     }
-// }
+
+//retrieve detailed coin data
+export  const getCoinData = async (coinId) => {
+    try {
+        const response =  await axios.get(`https://api.coingecko.com/api/v3/coins/${coinId}?localization=false&tickers=true&market_data=true&community_data=false&developer_data=false&sparkline=true`)
+        return response.data;
+    } catch (error) {
+        console.log(error.message)
+    }
+}
+
+export  const getCoinMarketChart = async (coinId) => {
+    try {
+        const response =  await axios.get(`https://api.coingecko.com/api/v3/coins/${coinId}/market_chart?vs_currency=usd&days=%201&interval=hourly`)
+        return response.data;
+    } catch (error) {
+        console.log(error.message)
+    }
+}

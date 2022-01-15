@@ -1,6 +1,10 @@
-import React from 'react';
-import { StyleSheet, View, Text, Image} from 'react-native';
-import CoinChart from '../components/CoinChart';
+import React, { useEffect, useState } from 'react';
+import { StyleSheet, View, Text, Image, ActivityIndicator, Dimensions} from 'react-native';
+// import CoinChart from '../components/CoinChart';
+import { getCoinData, getCoinMarketChart } from '../services/requests';
+import { ChartDot, ChartPath, ChartPathProvider } from '@rainbow-me/animated-charts';
+
+export const {width: SIZE} = Dimensions.get('window');
 
 const DetailedScreen = ({ navigation , route }) => {
 
@@ -9,13 +13,36 @@ const DetailedScreen = ({ navigation , route }) => {
     const symbol = navigation.getParam('symbol');
     const currentPrice = navigation.getParam('current_price');
     const priceChangePercentage7d = navigation.getParam('price_change_percentage_7d_in_currency');
-    const sparklinePrice = navigation.getParam('sparkline_in_7d.price');
-    // const data = route.sparkline_in_7d.price;
-    // console.log("sparkline " + data);
+    const coinId = navigation.getParam('id');
 
     const priceChangeColor = priceChangePercentage7d > 0 ? 'green' : 'red';
 
-    console.log(sparklinePrice);
+    console.log(coinId);
+
+    const [coin, setCoin] = useState(null);
+    const [coinMarketData, setCoinMarketData] = useState(null); 
+    const [loading, setLoading] = useState(false);
+
+    const fetchCoinData = async () => {
+        setLoading(true);
+        const fetchedCoinData = await getCoinData(coinId);
+        const fetchedCoinMarketData = await getCoinMarketChart(coinId)
+        setCoin(fetchedCoinData);
+        setCoinMarketData(fetchedCoinMarketData);
+        setLoading(false);
+    }
+
+    useEffect(() => {
+        fetchCoinData()
+    }, [])
+
+    if (loading || !coin || !coinMarketData) {
+        return <ActivityIndicator size="large" color="white"/>
+    }
+
+    const { prices } = coinMarketData;
+
+    console.log("detail " + prices);
 
     return (
         <View style={styles.detailedScreenWrapper}>
@@ -31,7 +58,14 @@ const DetailedScreen = ({ navigation , route }) => {
                     padding: 5, borderRadius: 10}}>{priceChangePercentage7d.toFixed(2)}%</Text>
                 </View>
             </View>
-            <CoinChart sparkline={sparklinePrice}/>
+            <ChartPathProvider
+                data={{
+                points: prices.map(([x, y]) => ({ x, y })),
+                }}
+            >
+                <ChartPath height={SIZE / 2} stroke="white" width={SIZE} />
+                <ChartDot style={{ backgroundColor: 'black' }} />
+            </ChartPathProvider>
         </View>
     )
 }
