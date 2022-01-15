@@ -31,6 +31,7 @@ const DetailedScreen = ({ navigation , route }) => {
                     padding: 5, borderRadius: 10}}>{priceChangePercentage7d.toFixed(2)}%</Text>
                 </View>
             </View>
+            <CoinChart sparkline={sparklinePrice}/>
         </View>
     )
 }
