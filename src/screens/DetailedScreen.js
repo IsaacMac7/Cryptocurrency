@@ -34,7 +34,7 @@ const DetailedScreen = ({ navigation , route }) => {
 
     useEffect(() => {
         fetchCoinData()
-    }, [])
+    }, []) //add error state if the call fails
 
     if (loading || !coin || !coinMarketData) {
         return (

@@ -24,7 +24,7 @@ export default function HomeScreen({ navigation }) {
 
     fetchMarketData();
 
-  }, [])
+  }, []) //add error state if the call fails
 
   return (
 
