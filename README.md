@@ -7,3 +7,4 @@ This is a react-native application that can do the following:
 - utilizes CoinGecko API for crypto market data
 - loading state with activity indicator
 - search Crypto coin by name/symbol
+- utilizes ESLint + Prettier
