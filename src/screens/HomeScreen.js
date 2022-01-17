@@ -15,16 +15,41 @@ const ListHeader = () => (
 export default function HomeScreen({ navigation }) {
 
   const [data, setData] = useState([]);
+  const [filteredData, setFilteredData] = useState([]);
+  const [search, setSearch] = useState('');
 
   useEffect (() => {
     const fetchMarketData = async () => {
       const marketData = await getMarketData();
-      setData(marketData);
+      setFilteredData(marketData);
+      setData(marketData); //is this needed anymore?
     }
 
     fetchMarketData();
 
   }, []) //add error state if the call fails
+
+  //filter crypto via Search 
+  const searchFilter = (text) => {
+      if (text) {
+          const newData = data.filter((item) => {
+              //format data to lower case
+              const coinName = item.name ? item.name.toLowerCase() : ''.toLowerCase();
+              const coinSymbol = item.symbol ? item.symbol.toLowerCase() : ''.toLowerCase();
+              //format user input
+              const textData = text.toLowerCase();
+              // return index if name/symbol matches with user input
+              return coinName.indexOf(textData) > -1 || coinSymbol.indexOf(textData)  > -1 ;
+          });
+          //sets searched data on the list
+          setFilteredData(newData);
+          setSearch(text);
+      } else {
+        //reutrn all crypto data on the list
+        setFilteredData(data);
+        setSearch(text);
+      }
+  }
 
   return (
 
@@ -32,13 +57,15 @@ export default function HomeScreen({ navigation }) {
             <View style={styles.searchBar}>
                 <TextInput
                     style={styles.input}
+                    value={search}
+                    onChangeText={(text) => searchFilter(text)}
                     placeholder= 'Search'
                     placeholderTextColor="#B0ADAD"
                 />
             </View>
             <FlatList
                 keyExtractor={(item) => item.id}
-                data={data}
+                data={filteredData}
                 renderItem={({item}) => (
                 <CoinItem 
                     name={item.name} 
