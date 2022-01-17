@@ -1,11 +1,11 @@
 import React, { useEffect, useState } from 'react';
 import { StyleSheet, View, Text, Image, ActivityIndicator, Dimensions } from 'react-native';
 import { getCoinMarketChart } from '../services/requests';
-import { ChartDot, ChartPath, ChartPathProvider } from '@rainbow-me/animated-charts';
+import { ChartPath, ChartPathProvider } from '@rainbow-me/animated-charts';
 
 export const { width: SIZE } = Dimensions.get('window');
 
-const DetailedScreen = ({ navigation, route }) => {
+const DetailedScreen = ({ navigation }) => {
 
     //coin params
     const coinId = navigation.getParam('id');
@@ -14,9 +14,6 @@ const DetailedScreen = ({ navigation, route }) => {
     const symbol = navigation.getParam('symbol');
     const currentPrice = navigation.getParam('current_price');
     const priceChangePercentage7d = navigation.getParam('price_change_percentage_7d_in_currency');
-
-    //for changing price color
-    const priceChangeColor = priceChangePercentage7d > 0 ? 'green' : 'red';
 
     const [coinMarketData, setCoinMarketData] = useState(null);
     const [isLoading, setIsLoading] = useState(false);
@@ -59,6 +56,9 @@ const DetailedScreen = ({ navigation, route }) => {
     //coin chart x and y data
     const { prices } = coinMarketData;
 
+    //for changing price color
+    const priceChangeColor = priceChangePercentage7d > 0 ? 'green' : 'red';
+
     return (
         <View style={styles.detailedScreenWrapper}>
             <View style={styles.titlesWrapper}>
@@ -81,7 +81,6 @@ const DetailedScreen = ({ navigation, route }) => {
                 }}
             >
                 <ChartPath height={SIZE / 2} stroke="white" width={SIZE} />
-                <ChartDot style={{ backgroundColor: 'black' }} />
             </ChartPathProvider>
             <View style={styles.bottomWrapper}>
                 <Text style={styles.bottomText}>This is the 7 day chart</Text>
