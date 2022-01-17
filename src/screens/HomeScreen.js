@@ -7,7 +7,7 @@ import { getMarketData } from '../services/requests';
 const ListHeader = () => (
   <>
   <View style={styles.titleWrapper}>
-        <Text style={styles.largeTitle}>Market (Top 20)</Text>
+        <Text style={styles.largeTitle}>Market</Text>
       </View>
       <View style={styles.divider}/>
   </>
@@ -120,7 +120,7 @@ const styles = StyleSheet.create({
     },
     largeTitle: {
         color: 'white',
-        fontSize: 34,
+        fontSize: 30,
         fontWeight: "bold",
     },
     divider: {
