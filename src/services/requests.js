@@ -1,65 +1,15 @@
 import axios from "axios";
-import moment from "moment";
+//GECKO API CALLS
 
-//formatting of data into x and y
-const formatSparkline = (numbers) => {
-    const sevenDaysAgo = moment().subtract(7, 'days').unix();
-    let formattedSparkline = numbers.map((item, index) => {
-        return {
-            x: sevenDaysAgo + (index + 1) * 3600,
-            y: item,
-        }
-    })
-
-    return formattedSparkline;
-}
-
-//formatting of data
-const formatMarketData = (data) => {
-    let formattedData = [];
-
-    data.forEach(item => {
-        const formattedSparkline = formatSparkline(item.sparkline_in_7d.price)
-
-        const formattedItem = {
-            ...item,
-            sparkline_in_7d: {
-                price: formattedSparkline
-            }
-        }
-
-        formattedData.push(formattedItem);
-    });
-
-    return formattedData;
-}
-
-
-//retrieve data
+//retrieve data market data
 export const getMarketData = async () => {
-
-    //coin gecko api call
+    //retrieve
     try {
         const response = await axios.get("https://api.coingecko.com/api/v3/coins/markets?vs_currency=usd&order=market_cap_desc&per_page=20&page=1&sparkline=true&price_change_percentage=7d")
-        const data = response.data;
-        const formattedResponse = formatMarketData(data)
-        return formattedResponse;
-
+        return response.data;
     //fail to retrieve data    
     } catch (error) {
         console.log(error.message);
-    }
-}
-
-
-//retrieve detailed coin data
-export  const getCoinData = async (coinId) => {
-    try {
-        const response =  await axios.get(`https://api.coingecko.com/api/v3/coins/${coinId}?localization=false&tickers=true&market_data=true&community_data=false&developer_data=false&sparkline=true`)
-        return response.data;
-        //fail to retrieve data  
-    } catch (error) {
-        console.log(error.message)
     }
 }
 
@@ -68,7 +18,7 @@ export  const getCoinMarketChart = async (coinId) => {
     try {
         const response =  await axios.get(`https://api.coingecko.com/api/v3/coins/${coinId}/market_chart?vs_currency=usd&days=%207&interval=hourly`)
         return response.data;
-        //fail to retrieve data  
+    //fail to retrieve data  
     } catch (error) {
         console.log(error.message)
     }

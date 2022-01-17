@@ -3,15 +3,16 @@ import React, { useState, useEffect } from 'react';
 import CoinItem from '../components/CoinItem';
 import { getMarketData } from '../services/requests';
 
-
+//header for List 
 const ListHeader = () => (
   <>
   <View style={styles.titleWrapper}>
-        <Text style={styles.largeTitle}>Markets</Text>
+        <Text style={styles.largeTitle}>Market (Top 20)</Text>
       </View>
       <View style={styles.divider}/>
   </>
 )
+
 export default function HomeScreen({ navigation }) {
 
   const [data, setData] = useState([]);
@@ -26,9 +27,9 @@ export default function HomeScreen({ navigation }) {
         setHasError(false);
         setIsLoading(true);
         try {
-            const marketData = await getMarketData();
+            const marketData = await getMarketData(); //request.js
             setFilteredData(marketData);
-            setData(marketData); //is this needed anymore?
+            setData(marketData); 
         } catch (error) {
             setHasError(true);
         }
@@ -59,13 +60,14 @@ export default function HomeScreen({ navigation }) {
         setSearch(text);
       }
   }
-
+    //error state
     if (hasError) {
         return (
             <View style={styles.states}>
                 <Text style={styles.stateText}>Something went wrong :(</Text>
             </View>
         )
+    //loading state
     } else if (isLoading) {
         return (
             <View style={styles.states}>
@@ -77,14 +79,13 @@ export default function HomeScreen({ navigation }) {
     }
 
     return (
-
         <SafeAreaView style={styles.container}>
             <View style={styles.searchBar}>
                 <TextInput
                     style={styles.input}
                     value={search}
                     onChangeText={(text) => searchFilter(text)}
-                    placeholder= 'Search'
+                    placeholder= 'Search for coin name/symbol'
                     placeholderTextColor="#B0ADAD"
                 />
             </View>
@@ -101,7 +102,8 @@ export default function HomeScreen({ navigation }) {
                     onPress={() => navigation.navigate('DetailedScreen', item)}
                 />
                 )}
-                ListHeaderComponent={<ListHeader/>}
+                // so when list is scrolled down, header doesn't get stuck on top
+                ListHeaderComponent={<ListHeader/>} 
             />
         </SafeAreaView>
         
@@ -109,40 +111,40 @@ export default function HomeScreen({ navigation }) {
 }
 
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: '#121212',
-  },
-  titleWrapper: {
-    paddingHorizontal: 16,
-  },
-  largeTitle: {
-    color: 'white',
-    fontSize: 34,
-    fontWeight: "bold",
-  },
-  divider: {
-    height: StyleSheet.hairlineWidth,
-    backgroundColor: '#A9ABB1',
-    marginHorizontal: 16,
-    marginTop: 16,
-  },
-  input: {
-      height: 40,
-      borderWidth: 1,
-      padding: 10,  
-      margin: 12,
-      width: '80%',
-      borderColor: 'white',
-      borderRadius: 15,
-      color: 'white',
-      fontSize: 20,
-  },
-  searchBar: {
-    alignItems: 'center',  
-    justifyContent: 'center',
-  },
-  states: {
+    container: {
+        flex: 1,
+        backgroundColor: '#121212',
+    },
+    titleWrapper: {
+        paddingHorizontal: 16,
+    },
+    largeTitle: {
+        color: 'white',
+        fontSize: 34,
+        fontWeight: "bold",
+    },
+    divider: {
+        height: StyleSheet.hairlineWidth,
+        backgroundColor: '#A9ABB1',
+        marginHorizontal: 16,
+        marginTop: 16,
+    },
+    input: {
+        height: 40,
+        borderWidth: 1,
+        padding: 10,  
+        margin: 12,
+        width: '80%',
+        borderColor: 'white',
+        borderRadius: 15,
+        color: 'white',
+        fontSize: 20,
+    },
+    searchBar: {
+        alignItems: 'center',  
+        justifyContent: 'center',
+    },
+    states: {
     flex: 1,
     justifyContent: 'center',
     backgroundColor: "#121212",

@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from 'react';
 import { StyleSheet, View, Text, Image, ActivityIndicator, Dimensions} from 'react-native';
-// import CoinChart from '../components/CoinChart';
 import { getCoinData, getCoinMarketChart } from '../services/requests';
 import { ChartDot, ChartPath, ChartPathProvider } from '@rainbow-me/animated-charts';
 
@@ -8,28 +7,28 @@ export const {width: SIZE} = Dimensions.get('window');
 
 const DetailedScreen = ({ navigation , route }) => {
 
+    //coin params
+    const coinId = navigation.getParam('id');
     const logoUrl = navigation.getParam('image');
     const name = navigation.getParam('name');
     const symbol = navigation.getParam('symbol');
     const currentPrice = navigation.getParam('current_price');
     const priceChangePercentage7d = navigation.getParam('price_change_percentage_7d_in_currency');
-    const coinId = navigation.getParam('id');
-
+    
+    //for changing price color
     const priceChangeColor = priceChangePercentage7d > 0 ? 'green' : 'red';
 
-    const [coin, setCoin] = useState(null);
     const [coinMarketData, setCoinMarketData] = useState(null); 
     const [isLoading, setIsLoading] = useState(false);
     const [hasError, setHasError] = useState(false);
 
+    //fetch
     useEffect(() => {
         const fetchCoinData = async () => {
             setHasError(false);
             setIsLoading(true);
             try {
-                const fetchedCoinData = await getCoinData(coinId);
-                const fetchedCoinMarketData = await getCoinMarketChart(coinId);
-                setCoin(fetchedCoinData);
+                const fetchedCoinMarketData = await getCoinMarketChart(coinId); //request.js
                 setCoinMarketData(fetchedCoinMarketData);
             } catch (error) {
                 setHasError(true);
@@ -38,14 +37,16 @@ const DetailedScreen = ({ navigation , route }) => {
         }
         fetchCoinData();
     }, [])
-
+    
+    //error state
     if (hasError) {
         return (
             <View style={styles.states}>
                 <Text style={styles.stateText}>Something went wrong :(</Text>
             </View>
         )
-    } else if (isLoading || !coin || !coinMarketData) {
+    //loading state
+    } else if (isLoading || !coinMarketData) {
         return (
             <View style={styles.states}>
                 <ActivityIndicator size="large" color="white" />
@@ -55,7 +56,7 @@ const DetailedScreen = ({ navigation , route }) => {
         )
     }
 
-
+    //coin chart x and y data
     const { prices } = coinMarketData;
 
     return (
@@ -80,6 +81,9 @@ const DetailedScreen = ({ navigation , route }) => {
                 <ChartPath height={SIZE / 2} stroke="white" width={SIZE} />
                 <ChartDot style={{ backgroundColor: 'black' }} />
             </ChartPathProvider>
+            <View style={styles.bottomWrapper}>
+                <Text style={styles.bottomText}>This is the 7 day chart</Text>
+            </View>
         </View>
     )
 }
@@ -132,9 +136,14 @@ const styles = StyleSheet.create({
     },
     stateText: {
         color: 'white',
+    },
+    bottomWrapper:{
+        alignItems: 'center',
+        justifyContent: 'center',
+    },
+    bottomText: {
+        color: "#B0ADAD",
     }
-
-
 })
 
 export default DetailedScreen;
