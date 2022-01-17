@@ -28,7 +28,7 @@ const DetailedScreen = ({ navigation , route }) => {
             setIsLoading(true);
             try {
                 const fetchedCoinData = await getCoinData(coinId);
-                const fetchedCoinMarketData = await getCoinMarketChart(coinId)
+                const fetchedCoinMarketData = await getCoinMarketChart(coinId);
                 setCoin(fetchedCoinData);
                 setCoinMarketData(fetchedCoinMarketData);
             } catch (error) {
