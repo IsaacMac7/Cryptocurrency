@@ -1,11 +1,11 @@
 import React, { useEffect, useState } from 'react';
-import { StyleSheet, View, Text, Image, ActivityIndicator, Dimensions} from 'react-native';
-import { getCoinData, getCoinMarketChart } from '../services/requests';
+import { StyleSheet, View, Text, Image, ActivityIndicator, Dimensions } from 'react-native';
+import { getCoinMarketChart } from '../services/requests';
 import { ChartDot, ChartPath, ChartPathProvider } from '@rainbow-me/animated-charts';
 
-export const {width: SIZE} = Dimensions.get('window');
+export const { width: SIZE } = Dimensions.get('window');
 
-const DetailedScreen = ({ navigation , route }) => {
+const DetailedScreen = ({ navigation, route }) => {
 
     //coin params
     const coinId = navigation.getParam('id');
@@ -14,11 +14,11 @@ const DetailedScreen = ({ navigation , route }) => {
     const symbol = navigation.getParam('symbol');
     const currentPrice = navigation.getParam('current_price');
     const priceChangePercentage7d = navigation.getParam('price_change_percentage_7d_in_currency');
-    
+
     //for changing price color
     const priceChangeColor = priceChangePercentage7d > 0 ? 'green' : 'red';
 
-    const [coinMarketData, setCoinMarketData] = useState(null); 
+    const [coinMarketData, setCoinMarketData] = useState(null);
     const [isLoading, setIsLoading] = useState(false);
     const [hasError, setHasError] = useState(false);
 
@@ -33,11 +33,11 @@ const DetailedScreen = ({ navigation , route }) => {
             } catch (error) {
                 setHasError(true);
             }
-            setIsLoading(false);  
+            setIsLoading(false);
         }
         fetchCoinData();
     }, [])
-    
+
     //error state
     if (hasError) {
         return (
@@ -45,14 +45,14 @@ const DetailedScreen = ({ navigation , route }) => {
                 <Text style={styles.stateText}>Something went wrong :(</Text>
             </View>
         )
-    //loading state
+        //loading state
     } else if (isLoading || !coinMarketData) {
         return (
             <View style={styles.states}>
                 <ActivityIndicator size="large" color="white" />
                 <Text style={styles.stateText}>Fetching data...</Text>
             </View>
-            
+
         )
     }
 
@@ -63,19 +63,21 @@ const DetailedScreen = ({ navigation , route }) => {
         <View style={styles.detailedScreenWrapper}>
             <View style={styles.titlesWrapper}>
                 <View style={styles.upperTitles}>
-                    <Image source={{ uri: logoUrl}} style={styles.image}/>
+                    <Image source={{ uri: logoUrl }} style={styles.image} />
                     <Text style={styles.name}> {name} </Text>
                 </View>
                 <Text style={styles.subtitle}>{name} price ({symbol.toUpperCase()}) </Text>
                 <View style={styles.rightTitles}>
                     <Text style={styles.currentPrice}>${currentPrice}</Text>
-                    <Text style={styles.priceChange, {backgroundColor:priceChangeColor, fontSize: 15, 
-                    padding: 5, borderRadius: 10}}>{priceChangePercentage7d.toFixed(2)}%</Text>
+                    <Text style={styles.priceChange, {
+                        backgroundColor: priceChangeColor, fontSize: 15,
+                        padding: 5, borderRadius: 10
+                    }}>{priceChangePercentage7d.toFixed(2)}%</Text>
                 </View>
             </View>
             <ChartPathProvider
                 data={{
-                points: prices.map(([x, y]) => ({ x, y })),
+                    points: prices.map(([x, y]) => ({ x, y })),
                 }}
             >
                 <ChartPath height={SIZE / 2} stroke="white" width={SIZE} />
@@ -93,12 +95,12 @@ const styles = StyleSheet.create({
         flex: 1,
         backgroundColor: '#121212',
     },
-    titlesWrapper:{
+    titlesWrapper: {
         marginLeft: 10,
     },
     image: {
-      height: 50,
-      width: 50,  
+        height: 50,
+        width: 50,
     },
     upperTitles: {
         justifyContent: 'center',
@@ -132,12 +134,12 @@ const styles = StyleSheet.create({
         flex: 1,
         justifyContent: 'center',
         backgroundColor: "#121212",
-        alignItems: 'center',   
+        alignItems: 'center',
     },
     stateText: {
         color: 'white',
     },
-    bottomWrapper:{
+    bottomWrapper: {
         alignItems: 'center',
         justifyContent: 'center',
     },
