@@ -5,61 +5,61 @@ import { getMarketData } from '../services/requests';
 
 //header for List 
 const ListHeader = () => (
-  <>
-  <View style={styles.titleWrapper}>
-        <Text style={styles.largeTitle}>Market</Text>
-      </View>
-      <View style={styles.divider}/>
-  </>
+    <>
+        <View style={styles.titleWrapper}>
+            <Text style={styles.largeTitle}>Market</Text>
+        </View>
+        <View style={styles.divider} />
+    </>
 )
 
 export default function HomeScreen({ navigation }) {
 
-  const [data, setData] = useState([]);
-  const [filteredData, setFilteredData] = useState([]);
-  const [search, setSearch] = useState('');
-  const [isLoading, setIsLoading] = useState(false);
-  const [hasError, setHasError] = useState(false);
-  
+    const [data, setData] = useState([]);
+    const [filteredData, setFilteredData] = useState([]);
+    const [search, setSearch] = useState('');
+    const [isLoading, setIsLoading] = useState(false);
+    const [hasError, setHasError] = useState(false);
 
-  useEffect (() => {
-    const fetchMarketData = async () => {
-        setHasError(false);
-        setIsLoading(true);
-        try {
-            const marketData = await getMarketData(); //request.js
-            setFilteredData(marketData);
-            setData(marketData); 
-        } catch (error) {
-            setHasError(true);
+
+    useEffect(() => {
+        const fetchMarketData = async () => {
+            setHasError(false);
+            setIsLoading(true);
+            try {
+                const marketData = await getMarketData(); //request.js
+                setFilteredData(marketData);
+                setData(marketData);
+            } catch (error) {
+                setHasError(true);
+            }
+            setIsLoading(false);
         }
-        setIsLoading(false);
+        fetchMarketData();
+
+    }, [])
+
+    //filter crypto via Search 
+    const searchFilter = (text) => {
+        if (text) {
+            const newData = data.filter((item) => {
+                //format data to lower case
+                const coinName = item.name ? item.name.toLowerCase() : ''.toLowerCase();
+                const coinSymbol = item.symbol ? item.symbol.toLowerCase() : ''.toLowerCase();
+                //format user input
+                const textData = text.toLowerCase();
+                // return index if name/symbol matches with user input
+                return coinName.indexOf(textData) > -1 || coinSymbol.indexOf(textData) > -1;
+            });
+            //sets searched data on the list
+            setFilteredData(newData);
+            setSearch(text);
+        } else {
+            //reutrn all crypto data on the list 
+            setFilteredData(data);
+            setSearch(text);
+        }
     }
-    fetchMarketData();
-
-  }, []) 
-
-  //filter crypto via Search 
-  const searchFilter = (text) => {
-      if (text) {
-          const newData = data.filter((item) => {
-              //format data to lower case
-              const coinName = item.name ? item.name.toLowerCase() : ''.toLowerCase();
-              const coinSymbol = item.symbol ? item.symbol.toLowerCase() : ''.toLowerCase();
-              //format user input
-              const textData = text.toLowerCase();
-              // return index if name/symbol matches with user input
-              return coinName.indexOf(textData) > -1 || coinSymbol.indexOf(textData)  > -1 ;
-          });
-          //sets searched data on the list
-          setFilteredData(newData);
-          setSearch(text);
-      } else {
-        //reutrn all crypto data on the list 
-        setFilteredData(data);
-        setSearch(text);
-      }
-  }
     //error state
     if (hasError) {
         return (
@@ -67,14 +67,14 @@ export default function HomeScreen({ navigation }) {
                 <Text style={styles.stateText}>Something went wrong :(</Text>
             </View>
         )
-    //loading state
+        //loading state
     } else if (isLoading) {
         return (
             <View style={styles.states}>
                 <ActivityIndicator size="large" color="white" />
                 <Text style={styles.stateText}>Loading...</Text>
             </View>
-            
+
         )
     }
 
@@ -85,28 +85,28 @@ export default function HomeScreen({ navigation }) {
                     style={styles.input}
                     value={search}
                     onChangeText={(text) => searchFilter(text)}
-                    placeholder= 'Search for coin name/symbol'
+                    placeholder='Search for coin name/symbol'
                     placeholderTextColor="#B0ADAD"
                 />
             </View>
             <FlatList
                 keyExtractor={(item) => item.id}
                 data={filteredData}
-                renderItem={({item}) => (
-                <CoinItem 
-                    name={item.name} 
-                    symbol={item.symbol}
-                    currentPrice={item.current_price}
-                    priceChangePercentage7d={item.price_change_percentage_7d_in_currency}
-                    logoUrl={item.image}
-                    onPress={() => navigation.navigate('DetailedScreen', item)}
-                />
+                renderItem={({ item }) => (
+                    <CoinItem
+                        name={item.name}
+                        symbol={item.symbol}
+                        currentPrice={item.current_price}
+                        priceChangePercentage7d={item.price_change_percentage_7d_in_currency}
+                        logoUrl={item.image}
+                        onPress={() => navigation.navigate('DetailedScreen', item)}
+                    />
                 )}
                 // so when list is scrolled down, header doesn't get stuck on top
-                ListHeaderComponent={<ListHeader/>} 
+                ListHeaderComponent={<ListHeader />}
             />
         </SafeAreaView>
-        
+
     );
 }
 
@@ -132,7 +132,7 @@ const styles = StyleSheet.create({
     input: {
         height: 40,
         borderWidth: 1,
-        padding: 10,  
+        padding: 10,
         margin: 12,
         width: '80%',
         borderColor: 'white',
@@ -141,14 +141,14 @@ const styles = StyleSheet.create({
         fontSize: 20,
     },
     searchBar: {
-        alignItems: 'center',  
+        alignItems: 'center',
         justifyContent: 'center',
     },
     states: {
-    flex: 1,
-    justifyContent: 'center',
-    backgroundColor: "#121212",
-    alignItems: 'center',   
+        flex: 1,
+        justifyContent: 'center',
+        backgroundColor: "#121212",
+        alignItems: 'center',
     },
     stateText: {
         color: 'white',
