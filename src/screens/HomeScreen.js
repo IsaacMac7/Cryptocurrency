@@ -1,5 +1,5 @@
-import { StyleSheet, Text, View, FlatList, SafeAreaView } from 'react-native';
-import React, { useState, useEffect, useRef, useMemo } from 'react';
+import { StyleSheet, Text, View, FlatList, SafeAreaView, TextInput } from 'react-native';
+import React, { useState, useEffect } from 'react';
 import CoinItem from '../components/CoinItem';
 import { getMarketData } from '../services/requests';
 
@@ -29,21 +29,28 @@ export default function HomeScreen({ navigation }) {
   return (
 
         <SafeAreaView style={styles.container}>
-        <FlatList
-            keyExtractor={(item) => item.id}
-            data={data}
-            renderItem={({item}) => (
-            <CoinItem 
-                name={item.name} 
-                symbol={item.symbol}
-                currentPrice={item.current_price}
-                priceChangePercentage7d={item.price_change_percentage_7d_in_currency}
-                logoUrl={item.image}
-                onPress={() => navigation.navigate('DetailedScreen', item)}
+            <View style={styles.searchBar}>
+                <TextInput
+                    style={styles.input}
+                    placeholder= 'Search'
+                    placeholderTextColor="#B0ADAD"
+                />
+            </View>
+            <FlatList
+                keyExtractor={(item) => item.id}
+                data={data}
+                renderItem={({item}) => (
+                <CoinItem 
+                    name={item.name} 
+                    symbol={item.symbol}
+                    currentPrice={item.current_price}
+                    priceChangePercentage7d={item.price_change_percentage_7d_in_currency}
+                    logoUrl={item.image}
+                    onPress={() => navigation.navigate('DetailedScreen', item)}
+                />
+                )}
+                ListHeaderComponent={<ListHeader/>}
             />
-            )}
-            ListHeaderComponent={<ListHeader/>}
-        />
         </SafeAreaView>
         
   );
@@ -55,7 +62,6 @@ const styles = StyleSheet.create({
     backgroundColor: '#121212',
   },
   titleWrapper: {
-    marginTop: 60,
     paddingHorizontal: 16,
   },
   largeTitle: {
@@ -69,4 +75,20 @@ const styles = StyleSheet.create({
     marginHorizontal: 16,
     marginTop: 16,
   },
+  input: {
+      height: 40,
+      borderWidth: 1,
+      padding: 10,  
+      margin: 12,
+      width: '80%',
+      borderColor: 'white',
+      borderRadius: 15,
+      color: 'white',
+      fontSize: 20,
+  },
+  searchBar: {
+    alignItems: 'center',  
+    justifyContent: 'center',
+    
+  }
 });
