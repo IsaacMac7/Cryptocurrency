@@ -17,38 +17,46 @@ const DetailedScreen = ({ navigation , route }) => {
 
     const priceChangeColor = priceChangePercentage7d > 0 ? 'green' : 'red';
 
-    console.log(coinId);
-
     const [coin, setCoin] = useState(null);
     const [coinMarketData, setCoinMarketData] = useState(null); 
-    const [loading, setLoading] = useState(false);
-
-    const fetchCoinData = async () => {
-        setLoading(true);
-        const fetchedCoinData = await getCoinData(coinId);
-        const fetchedCoinMarketData = await getCoinMarketChart(coinId)
-        setCoin(fetchedCoinData);
-        setCoinMarketData(fetchedCoinMarketData);
-        setLoading(false);
-    }
+    const [isLoading, setIsLoading] = useState(false);
+    const [hasError, setHasError] = useState(false);
 
     useEffect(() => {
-        fetchCoinData()
-    }, []) //add error state if the call fails
+        const fetchCoinData = async () => {
+            setHasError(false);
+            setIsLoading(true);
+            try {
+                const fetchedCoinData = await getCoinData(coinId);
+                const fetchedCoinMarketData = await getCoinMarketChart(coinId)
+                setCoin(fetchedCoinData);
+                setCoinMarketData(fetchedCoinMarketData);
+            } catch (error) {
+                setHasError(true);
+            }
+            setIsLoading(false);  
+        }
+        fetchCoinData();
+    }, [])
 
-    if (loading || !coin || !coinMarketData) {
+    if (hasError) {
         return (
-            <View style={styles.loading}>
+            <View style={styles.states}>
+                <Text style={styles.stateText}>Something went wrong :(</Text>
+            </View>
+        )
+    } else if (isLoading || !coin || !coinMarketData) {
+        return (
+            <View style={styles.states}>
                 <ActivityIndicator size="large" color="white" />
-                <Text style={styles.loadingText}>Fetching data...</Text>
+                <Text style={styles.stateText}>Fetching data...</Text>
             </View>
             
         )
     }
 
-    const { prices } = coinMarketData;
 
-    console.log("detail " + prices);
+    const { prices } = coinMarketData;
 
     return (
         <View style={styles.detailedScreenWrapper}>
@@ -116,13 +124,13 @@ const styles = StyleSheet.create({
         fontSize: 30,
         color: 'white',
     },
-    loading: {
+    states: {
         flex: 1,
         justifyContent: 'center',
         backgroundColor: "#121212",
         alignItems: 'center',   
     },
-    loadingText: {
+    stateText: {
         color: 'white',
     }
 

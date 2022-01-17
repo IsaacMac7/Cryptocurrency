@@ -1,4 +1,4 @@
-import { StyleSheet, Text, View, FlatList, SafeAreaView, TextInput } from 'react-native';
+import { StyleSheet, Text, View, FlatList, SafeAreaView, TextInput, ActivityIndicator } from 'react-native';
 import React, { useState, useEffect } from 'react';
 import CoinItem from '../components/CoinItem';
 import { getMarketData } from '../services/requests';
@@ -17,17 +17,26 @@ export default function HomeScreen({ navigation }) {
   const [data, setData] = useState([]);
   const [filteredData, setFilteredData] = useState([]);
   const [search, setSearch] = useState('');
+  const [isLoading, setIsLoading] = useState(false);
+  const [hasError, setHasError] = useState(false);
+  
 
   useEffect (() => {
     const fetchMarketData = async () => {
-      const marketData = await getMarketData();
-      setFilteredData(marketData);
-      setData(marketData); //is this needed anymore?
+        setHasError(false);
+        setIsLoading(true);
+        try {
+            const marketData = await getMarketData();
+            setFilteredData(marketData);
+            setData(marketData); //is this needed anymore?
+        } catch (error) {
+            setHasError(true);
+        }
+        setIsLoading(false);
     }
-
     fetchMarketData();
 
-  }, []) //add error state if the call fails
+  }, []) 
 
   //filter crypto via Search 
   const searchFilter = (text) => {
@@ -45,13 +54,29 @@ export default function HomeScreen({ navigation }) {
           setFilteredData(newData);
           setSearch(text);
       } else {
-        //reutrn all crypto data on the list
+        //reutrn all crypto data on the list 
         setFilteredData(data);
         setSearch(text);
       }
   }
 
-  return (
+    if (hasError) {
+        return (
+            <View style={styles.states}>
+                <Text style={styles.stateText}>Something went wrong :(</Text>
+            </View>
+        )
+    } else if (isLoading) {
+        return (
+            <View style={styles.states}>
+                <ActivityIndicator size="large" color="white" />
+                <Text style={styles.stateText}>Loading...</Text>
+            </View>
+            
+        )
+    }
+
+    return (
 
         <SafeAreaView style={styles.container}>
             <View style={styles.searchBar}>
@@ -80,7 +105,7 @@ export default function HomeScreen({ navigation }) {
             />
         </SafeAreaView>
         
-  );
+    );
 }
 
 const styles = StyleSheet.create({
@@ -116,6 +141,14 @@ const styles = StyleSheet.create({
   searchBar: {
     alignItems: 'center',  
     justifyContent: 'center',
-    
-  }
+  },
+  states: {
+    flex: 1,
+    justifyContent: 'center',
+    backgroundColor: "#121212",
+    alignItems: 'center',   
+    },
+    stateText: {
+        color: 'white',
+    }
 });
